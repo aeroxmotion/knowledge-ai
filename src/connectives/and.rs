@@ -1,20 +1,10 @@
-use crate::{model::Model, sentence::Sentence, symbol::SymbolName};
+use crate::{merge_symbols, model::Model, sentence::Sentence, symbol::SymbolName};
 
 pub struct And(pub Vec<Box<dyn Sentence>>);
 
 impl Sentence for And {
 	fn symbols(&self) -> Vec<SymbolName> {
-		let mut symbols = vec![];
-
-		for sentence in &self.0 {
-			for symbol in sentence.symbols() {
-				if !symbols.contains(&symbol) {
-					symbols.push(symbol)
-				}
-			}
-		}
-
-		symbols
+		merge_symbols!(&self.0[..])
 	}
 
 	fn evaluate(&self, model: &Model) -> bool {

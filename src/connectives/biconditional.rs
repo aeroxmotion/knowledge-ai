@@ -1,18 +1,10 @@
-use crate::{model::Model, sentence::Sentence, symbol::SymbolName};
+use crate::{merge_symbols, model::Model, sentence::Sentence, symbol::SymbolName};
 
 pub struct Biconditional(pub Box<dyn Sentence>, pub Box<dyn Sentence>);
 
 impl Sentence for Biconditional {
 	fn symbols(&self) -> Vec<SymbolName> {
-		let mut symbols = self.0.symbols();
-
-		for symbol in self.1.symbols() {
-			if !symbols.contains(&symbol) {
-				symbols.push(symbol)
-			}
-		}
-
-		symbols
+		merge_symbols!(&self.0, &self.1)
 	}
 
 	fn evaluate(&self, model: &Model) -> bool {
